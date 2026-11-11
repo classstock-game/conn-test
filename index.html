@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>연결 시험</title>
+<style>body{font-family:sans-serif;padding:24px;font-size:20px;line-height:1.6}.ok{color:#0a7d2c;font-weight:bold}.no{color:#c00;font-weight:bold}</style></head>
+<body>
+<h1>연결 시험</h1>
+<p>1. 이 화면이 보이면 깃허브 주소는 열려요. <span class="ok">열림</span></p>
+<p>2. 게임 서버 실시간 연결: <span id="ws">확인 중...</span></p>
+<p>3. 게임 서버 주소 접근: <span id="fx">확인 중...</span></p>
+<script>
+var H="tamna-flag-war.classstock-game.workers.dev";
+function set(id,ok,t){var e=document.getElementById(id);e.textContent=t;e.className=ok?"ok":"no";}
+var done=false;
+try{
+  var w=new WebSocket("wss://"+H+"/ws?code=937267");
+  w.onopen=function(){done=true;set("ws",true,"연결됨");w.close();};
+  w.onerror=function(){if(!done)set("ws",false,"막힘 또는 실패");};
+  setTimeout(function(){if(!done)set("ws",false,"10초 안에 연결 안 됨");},10000);
+}catch(e){set("ws",false,"실패: "+e.message);}
+fetch("https://"+H+"/api/info?code=937267",{mode:"no-cors"}).then(function(){set("fx",true,"요청 통과");}).catch(function(){set("fx",false,"막힘 또는 실패");});
+</script>
+</body></html>
